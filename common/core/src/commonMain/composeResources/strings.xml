@@ -1,0 +1,8 @@
+<resources>
+
+    <!--    graphs    -->
+    <string name="phonetic">علم الصوتيات</string>
+    <string name="morphology">علم الصرف</string>
+    <string name="syntax">علم النحو</string>
+    <string name="rhetoric">البلاغة</string>
+</resources>
