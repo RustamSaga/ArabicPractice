@@ -1,0 +1,21 @@
+import kotlin.Float;
+import kotlin.Int;
+
+CREATE TABLE IF NOT EXISTS cityLocation (
+    cityId INTEGER  AS Int  NOT NULL PRIMARY KEY ON CONFLICT REPLACE,
+    latitude REAL   AS Float    NOT NULL,
+    longitude REAL  AS Float    NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS cityName(
+   id INTEGER           AS Int  NOT NULL,
+   languageId INTEGER   AS Int  NOT NULL,
+   name TEXT                    NOT NULL,
+   PRIMARY KEY (id, languageId) ON CONFLICT REPLACE
+);
+
+CREATE TABLE IF NOT EXISTS language (
+    id INTEGER  AS Int  NOT NULL ON CONFLICT REPLACE,
+    name TEXT           NOT NULL
+);
+
