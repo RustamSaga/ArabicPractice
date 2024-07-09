@@ -1,0 +1,1 @@
+interface ArabicPracticeDatabase: CitiesLocationDatabase
