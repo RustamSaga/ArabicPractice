@@ -1,0 +1,4 @@
+package goals
+
+interface AtTatbiq {
+}
