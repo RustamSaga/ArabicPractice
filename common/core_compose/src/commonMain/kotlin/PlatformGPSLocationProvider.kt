@@ -1,0 +1,1 @@
+expect class PlatformGPSLocationProvider: LocationProvider
