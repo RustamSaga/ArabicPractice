@@ -1,3 +1,3 @@
 package goals.practice
 
-interface Writing: Practice
+//interface Writing: Practice

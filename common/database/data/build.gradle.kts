@@ -8,42 +8,48 @@ plugins {
     id("com.github.gmazzo.buildconfig")
 }
 // Tasks desktop
-private val taskOfCopyDbToDesktopMainRes = "taskOfCopyDatabaseFileFromDer"
-private val taskOfCopyTestDbToDesktopTestRes = "taskOfCopyTestDatabaseFileFromDer"
+val taskOfCopyDbToDesktopMainRes = "taskOfCopyDatabaseFileFromDer"
+val taskOfCopyTestDbToDesktopTestRes = "taskOfCopyTestDatabaseFileFromDer"
 // Tasks android
-private val taskOfCopyDbToAndroidMainAssets = "copyDatabaseToAndroidMainAssets"
-private val taskOfCopyTestDbToAndroidTestAssets = "copyDatabaseToAndroidTestAssets"
+val taskOfCopyDbToAndroidMainAssets = "copyDatabaseToAndroidMainAssets"
+val taskOfCopyTestDbToAndroidTestAssets = "copyDatabaseToAndroidTestAssets"
 
-private val properties = gradleLocalProperties(projectDir)
-private val copyTestDatabasePath: String = properties.getProperty("copyTestDatabasePath")
-private val releaseDatabasePath: String = properties.getProperty("releaseDatabasePath")
+val properties = gradleLocalProperties(projectDir)
+val testDatabaseFile: File = file(properties.getProperty("copyTestDatabasePath"))
+val releaseDatabaseFile: File = file(properties.getProperty("releaseDatabasePath"))
 
-private val databaseName = "AppDatabase"
-private val databaseFileName = "AppDatabase.db"
-private val testDatabaseFileName = "TestDatabase.db"
+val databaseName = "AppDatabase"
+val databaseFileName = "AppDatabase.db"
+val testDatabaseFileName = "TestDatabase.db"
 
-private val destinationDatabasePath = "src/desktopMain/resources"
-private val destinationTestDatabasePath = "src/desktopTest/resources"
+// desktop destination
+val desktopDestinationDbPath = "src/desktopMain/resources"
+val desktopTestDestinationDbPath = "src/desktopTest/resources"
+
+// android destination
+val androidDestinationDbPath = "src/androidMain/assets"
+val androidTestDestinationDbPath = "src/androidInstrumentedTest/assets"
+
 
 
 tasks.register(taskOfCopyDbToAndroidMainAssets) {
     doLast {
-        val resourcesDir = file(releaseDatabasePath)
-        val assetsDir = file("src/androidMain/assets")
+        val resourcesDir = releaseDatabaseFile
+        val assetsDir = file(androidDestinationDbPath)
         resourcesDir.copyTo(File(assetsDir, resourcesDir.name), overwrite = true)
     }
 }
 tasks.register(taskOfCopyTestDbToAndroidTestAssets) {
     doLast {
-        val resourcesDir = file(copyTestDatabasePath)
-        val assetsDir = file("src/androidInstrumentedTest/assets")
+        val resourcesDir = testDatabaseFile
+        val assetsDir = file(androidTestDestinationDbPath)
         resourcesDir.copyTo(File(assetsDir, resourcesDir.name), overwrite = true)
     }
 }
 
 tasks.register<Copy>(taskOfCopyDbToDesktopMainRes) {
-    val resourcesDir = file(releaseDatabasePath)
-    val destDir = file(destinationDatabasePath)
+    val resourcesDir = releaseDatabaseFile
+    val destDir = file(desktopDestinationDbPath)
 
     from(resourcesDir.path) {
         include(resourcesDir.name)
@@ -54,8 +60,8 @@ tasks.register<Copy>(taskOfCopyDbToDesktopMainRes) {
     into(destDir)
 }
 tasks.register<Copy>(taskOfCopyTestDbToDesktopTestRes) {
-    val resourcesDir = file(copyTestDatabasePath)
-    val destDir = file(destinationTestDatabasePath)
+    val resourcesDir = testDatabaseFile
+    val destDir = file(desktopTestDestinationDbPath)
 
     from(resourcesDir.path) {
         include(resourcesDir.name)
@@ -69,16 +75,15 @@ tasks.register<Copy>(taskOfCopyTestDbToDesktopTestRes) {
 
 buildConfig {
 
-//    buildConfigField("BUILD_TYPE", buildType)
-
     sourceSets {
         named("desktopTest") {
-            buildConfigField("testDatabasePath", "$destinationTestDatabasePath/")
-//            buildConfigField("testDestinationDatabasePath", testingPath)
+            buildConfigField("testDatabasePath", "$desktopTestDestinationDbPath/")
             buildConfigField("testDatabaseName", testDatabaseFileName)
-
         }
-
+        named("androidMain") {
+            buildConfigField("databaseName", databaseFileName)
+            buildConfigField("assetsDbName", releaseDatabaseFile.name)
+        }
     }
 }
 

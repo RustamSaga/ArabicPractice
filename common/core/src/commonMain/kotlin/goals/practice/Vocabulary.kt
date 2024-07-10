@@ -1,4 +1,4 @@
 package goals.practice
 
 // словарный запас, лексика
-interface Vocabulary: Practice
+//interface Vocabulary: Practice

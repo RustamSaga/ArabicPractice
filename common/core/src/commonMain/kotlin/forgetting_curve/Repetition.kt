@@ -45,6 +45,16 @@ interface Repetition {
      * - 5 - after 2-3 month
      */
     class Middle : Repetition {
+        override val numberOfSkippedRepetitions: Int
+            get() = TODO("Not yet implemented")
+
+        override fun setNextRepetitionTime() {
+            TODO("Not yet implemented")
+        }
+
+        override fun getNextRepetitionTime(): RepetitionTime {
+            TODO("Not yet implemented")
+        }
     }
 
     /**
@@ -61,6 +71,16 @@ interface Repetition {
      * * 11 - after 2 years
      */
     class High : Repetition {
+        override val numberOfSkippedRepetitions: Int
+            get() = TODO("Not yet implemented")
+
+        override fun setNextRepetitionTime() {
+            TODO("Not yet implemented")
+        }
+
+        override fun getNextRepetitionTime(): RepetitionTime {
+            TODO("Not yet implemented")
+        }
 
     }
 }

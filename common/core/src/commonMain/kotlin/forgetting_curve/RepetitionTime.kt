@@ -6,5 +6,4 @@ interface RepetitionTime {
 
     val timeToNextRepetition: String
 
-    val 
 }

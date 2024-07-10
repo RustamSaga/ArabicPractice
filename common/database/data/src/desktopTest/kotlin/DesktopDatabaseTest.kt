@@ -27,8 +27,7 @@ class DesktopDatabaseTest {
 
         val driver = DbDriverFactory(
             PlatformConfiguration(
-            databasePath = destinationDatabasePath,
-            isTest = true
+            databasePath = destinationDatabasePath
         )
         )
         database = createDatabase(driver)

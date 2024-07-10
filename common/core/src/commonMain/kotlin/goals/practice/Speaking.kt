@@ -1,3 +1,3 @@
 package goals.practice
 
-interface Speaking: Practice
+//interface Speaking: Practice

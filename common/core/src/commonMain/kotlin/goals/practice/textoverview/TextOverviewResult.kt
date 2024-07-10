@@ -2,12 +2,11 @@ package goals.practice.textoverview
 
 import utils.WorkTime
 import goals.Measurement
-import utils.DateTime
 
 data class TextOverviewResult(
     override val id: Int,
     val unknownWordCount: Int = 0,
-    val completedDate: DateTime? = null,
+//    val completedDate: DateTime? = null,
     val completed: Boolean = false,
     val workTime: WorkTime
 ): Measurement {
