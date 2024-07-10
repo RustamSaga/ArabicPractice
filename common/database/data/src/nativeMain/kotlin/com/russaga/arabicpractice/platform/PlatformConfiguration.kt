@@ -1,0 +1,3 @@
+package com.russaga.arabicpractice.platform
+
+actual class PlatformConfiguration

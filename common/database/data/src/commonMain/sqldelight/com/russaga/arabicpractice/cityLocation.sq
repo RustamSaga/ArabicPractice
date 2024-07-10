@@ -1,0 +1,23 @@
+import kotlin.Float;
+import kotlin.Int;
+
+CREATE TABLE IF NOT EXISTS cityLocation (
+    cityId INTEGER AS Int  NOT NULL PRIMARY KEY ON CONFLICT REPLACE,
+    latitude REAL AS Float  NOT NULL,
+    longitude REAL AS Float  NOT NULL
+);
+
+getCityLocationById:
+SELECT cl.cityId, cn.name, cn.languageId, cl.latitude, cl.longitude
+FROM cityLocation AS cl
+JOIN cityName cn ON cl.cityId = cn.id AND cn.languageId = cn.languageId
+WHERE cl.cityId = ? AND cn.languageId = ?;
+
+getAllCities:
+SELECT cl.cityId, cn.name, cn.languageId, cl.latitude, cl.longitude
+FROM cityLocation cl
+JOIN cityName cn ON cl.cityId = cn.id AND cn.languageId = cn.languageId
+WHERE cn.languageId = ?;
+
+insertCityLocation:
+INSERT INTO cityLocation(cityId, latitude, longitude) VALUES(?, ?, ?);

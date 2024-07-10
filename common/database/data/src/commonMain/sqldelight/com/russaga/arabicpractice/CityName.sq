@@ -1,0 +1,12 @@
+import kotlin.Int;
+
+
+CREATE TABLE IF NOT EXISTS cityName(
+   id INTEGER AS Int            NOT NULL,
+   languageId INTEGER AS Int    NOT NULL,
+   name TEXT                    NOT NULL,
+   PRIMARY KEY (id, languageId) ON CONFLICT REPLACE
+);
+
+insertCityName:
+INSERT INTO cityName(id, languageId, name) VALUES(?,?,?);
