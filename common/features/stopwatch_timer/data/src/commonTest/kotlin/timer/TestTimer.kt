@@ -6,9 +6,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -17,7 +15,6 @@ import state.TimerState
 import time.ElapsedTimeCalculator
 import time.FakeTimestampProvider
 import time.TimestampProvider
-import kotlin.native.concurrent.ThreadLocal
 import kotlin.reflect.KClass
 import kotlin.test.Test
 import kotlin.test.assertEquals
