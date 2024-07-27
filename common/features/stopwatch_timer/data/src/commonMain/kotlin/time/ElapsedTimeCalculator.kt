@@ -1,8 +1,6 @@
 package time
 
-import model.TimeMillisData
 import state.StopwatchState
-import utils.formatTime
 
 /**
  * A calculator to compute elapsed time for the stopwatch.

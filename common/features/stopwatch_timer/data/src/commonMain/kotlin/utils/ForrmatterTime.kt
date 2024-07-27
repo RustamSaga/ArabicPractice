@@ -2,7 +2,6 @@ package utils
 
 import kotlin.math.abs
 
-internal const val START_FORMATTED_TIME = "00:00:000"
 
 /**
  * Formats milliseconds into "mm:ss:SSS" format.
