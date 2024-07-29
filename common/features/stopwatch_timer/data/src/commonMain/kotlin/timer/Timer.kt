@@ -30,24 +30,26 @@ class Timer(
     /**
      * Stores the time when the timer was last started or resumed.
      */
-    private val startTime = MutableStateFlow(0L)
+    private var startTime = 0L
 
     /**
      * Stores the last elapsed time to ensure correct resumption of the timer after a pause.
      */
-    private val lastElapsedTime = MutableStateFlow(0L)
+    private var lastElapsedTime = 0L
+
+    private var lastCalculateMilliseconds = 0L
 
     /**
      * Stores the limit of the timer in milliseconds.
      */
-    private val limitMilliseconds = MutableStateFlow(0L)
+    private var limitMilliseconds = 0L
 
     /**
      * Stores the current limit, which can be updated during the timer's operation.
      */
-    private val currentLimit = MutableStateFlow(0L)
+    private var currentLimit = 0L
     override val limit: Long
-        get() = limitMilliseconds.value
+        get() = limitMilliseconds
 
     /**
      * Stores the current state of the timer.
@@ -61,18 +63,16 @@ class Timer(
      *
      * @param minutes The minutes part of the limit.
      * @param seconds The seconds part of the limit.
-     * @throws IllegalStateException If the timer is running or paused.
      * @throws IllegalArgumentException If the limit is less than 1 second.
      */
     override fun setLimit(minutes: Int, seconds: Int) {
         if (mutableStatus.value::class == TimerState.Running::class ||
             mutableStatus.value::class == TimerState.Paused::class
-        )
-            throw IllegalStateException("Cannot perform this operation while the timer is running or paused.")
+        ) return
 
         val totalSeconds = minutes * 60 + seconds
-        limitMilliseconds.value = totalSeconds * 1000L
-        currentLimit.value = limitMilliseconds.value
+        limitMilliseconds = totalSeconds * 1000L
+        currentLimit = limitMilliseconds
     }
 
     /**
@@ -106,15 +106,15 @@ class Timer(
         if (job?.isActive == true) return
         job = scope.launch {
             while (isActive) {
-                val elapsedTime = elapsedTimeCalculator.calculate(
-                    startTime = startTime.value,
-                    lastElapsedTime = lastElapsedTime.value
+                lastCalculateMilliseconds = elapsedTimeCalculator.calculate(
+                    startTime = startTime,
+                    lastElapsedTime = lastElapsedTime
                 )
-                val remainingTime = currentLimit.value - elapsedTime
+                val remainingTime = currentLimit - lastCalculateMilliseconds
                 mutableStatus.value = TimerState.Running(
                     timeMillisData = TimeMillisData(
                         formattedTime = formatTime(remainingTime),
-                        elapsedTime = remainingTime
+                        timeMillis = remainingTime
                     )
                 )
                 delay(10L)
@@ -135,13 +135,13 @@ class Timer(
     }
 
     override fun reset() {
-        lastElapsedTime.value = 0
-        currentLimit.value = limitMilliseconds.value
+        lastElapsedTime = 0
+        currentLimit = limitMilliseconds
         mutableStatus.value =
             TimerState.Stopped(
                 TimeMillisData(
-                    formattedTime = formatTime(currentLimit.value),
-                    elapsedTime = currentLimit.value
+                    formattedTime = formatTime(currentLimit),
+                    timeMillis = currentLimit
                 )
             )
     }
@@ -150,8 +150,7 @@ class Timer(
      * Resumes the timer from the last elapsed time.
      */
     private fun resume() {
-        lastElapsedTime.value = mutableStatus.value.timeMillisData.elapsedTime
-        currentLimit.value = lastElapsedTime.value
+        lastElapsedTime = lastCalculateMilliseconds
         mutableStatus.updateTo(TimerState.Running::class)
     }
 
@@ -161,7 +160,7 @@ class Timer(
      * @throws IllegalArgumentException If the limit is less than 1000 milliseconds (1 second).
      */
     private fun limitCheck() {
-        if (limitMilliseconds.value < 1000)
+        if (limitMilliseconds < 1000)
             throw IllegalArgumentException("The timer limit must be at least 1000 milliseconds (1 second).")
     }
 
@@ -175,7 +174,7 @@ class Timer(
         mutableStatus.value = when (clazz) {
             TimerState.Paused::class -> TimerState.Paused(this.value.timeMillisData)
             TimerState.Running::class -> {
-                startTime.value = elapsedTimeCalculator.timestampProvider.currentMilliseconds
+                startTime = elapsedTimeCalculator.timestampProvider.currentMilliseconds
                 TimerState.Running(this.value.timeMillisData)
             }
 

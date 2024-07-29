@@ -73,7 +73,7 @@ class Stopwatch(
                 mutableStatus.value = StopwatchState.Running(
                     timeMillisData = TimeMillisData(
                         formattedTime = formatTime(elapsedTime),
-                        elapsedTime = elapsedTime
+                        timeMillis = elapsedTime
                     )
                 )
                 delay(10L)
@@ -94,7 +94,7 @@ class Stopwatch(
     }
 
     private fun resume() {
-        lastElapsedTime.value = mutableStatus.value.timeMillisData.elapsedTime
+        lastElapsedTime.value = mutableStatus.value.timeMillisData.timeMillis
         mutableStatus.updateTo(StopwatchState.Running::class)
     }
 
